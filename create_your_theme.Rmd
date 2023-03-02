@@ -1,0 +1,574 @@
+---
+title: "Create your own plot style"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+data("diamonds")
+data("mpg")
+```
+
+# Create your own style
+
+## Introduction
+This practical will focus on modifiy the components of a theme() to create a signature style.
+
+For this exercise it will be helpful to have the theme() help page open in RStudio (?theme) or a [browser](https://ggplot2.tidyverse.org/reference/theme.html).
+
+For this exercise we will work with the following example plot. 
+```{r}
+ggplot(data = iris) +
+  geom_point(mapping = aes(x = Petal.Length, y = Petal.Width, colour = Species)) +
+  facet_grid(cols = vars(Species)) + 
+  labs(title = "Differences in flower size by iris species",
+       subtitle = "Plot of petal width by petal length",
+       caption = "Data source: R")
+
+```
+
+## Plot Rectangles
+
+You use element_rect() to modify rectangle elements in theme(). 
+You can also decide how to position your rectangles. 
+
+```{r, eval=FALSE, include=TRUE}
+element_rect(
+  fill = NULL,
+  colour = NULL,
+  size = NULL,
+  linetype = NULL,
+  color = NULL,
+  inherit.blank = FALSE
+)
+```
+
+
+```{r}
+# Colours
+  dark_green <- "#002D30"
+  light_grey <- "#F2F2F2"
+  green_blue <- "#007883"
+  light_green <- "#4FE18F"
+  blue <- "#00C3D6"
+  pink <- "#FF709D"
+  purple <- "#A361FF"
+  orange <- "#ffa45a"
+# Font  
+  font <- "Derailed"
+
+# The plot
+ggplot(data = iris) +
+  geom_point(mapping = aes(x = Petal.Length, y = Petal.Width, colour = Species)) +
+  facet_grid(cols = vars(Species)) + 
+  labs(title = "Differences in flower size by iris species",
+       subtitle = "Plot of petal width by petal length",
+       caption = "Data source: R") +
+
+  # Theme  
+  theme(
+    # You can use this to remove all lines from the plot
+    #rect = element_blank(),
+    
+    # Plot rectangle format:
+    #plot.background = element_rect(fill = pink),
+    
+    # Panel rectangle format:
+    #panel.background = element_rect(fill = "white", colour = pink, size = .4, linetype = "dotted"),
+    # panel.border = element_rect(fill = light_grey, colour = pink), # you probably will never need to use this
+    
+    #legend.key = element_rect(fill = "white", colour = pink),
+    #legend.background = element_rect(colour = pink),
+    # legend.margin = margin(9,9,9,9),
+    
+    legend.box.background = element_rect(fill = pink, colour = pink),
+    legend.box.margin = margin(9,9,9,9),
+    
+    
+    #strip.background = element_rect(colour = pink),
+    )
+
+```
+
+
+## Text
+
+You use element_text() to modify text elements in theme(). 
+
+```{r eval=FALSE}
+element_text(
+  family = NULL,
+  face = NULL,
+  colour = NULL,
+  size = NULL,
+  hjust = NULL,
+  vjust = NULL,
+  angle = NULL,
+  lineheight = NULL,
+  color = NULL,
+  margin = NULL,
+  debug = NULL,
+  inherit.blank = FALSE
+)
+```
+
+As theme is hierarchical in nature you do not need to adjust every text element in theme. 
+- font
+- font size
+- font colour
+
+```{r}
+# Colours
+  dark_green <- "#002D30"
+  light_grey <- "#F2F2F2"
+  green_blue <- "#007883"
+  light_green <- "#4FE18F"
+  blue <- "#00C3D6"
+  pink <- "#FF709D"
+  purple <- "#A361FF"
+  orange <- "#ffa45a"
+# Font  
+  font <- "Derailed"
+
+# The plot
+ggplot(data = iris) +
+  geom_point(mapping = aes(x = Petal.Length, y = Petal.Width, colour = Species)) +
+  facet_grid(cols = vars(Species)) + 
+  labs(title = "Differences in flower size by iris species",
+       subtitle = "Plot of petal width by petal length",
+       caption = "Data source: R") +
+
+  # Theme  
+  theme(
+    # Title text format:
+    # Set the font family and font colour 
+    text = element_text(family=font,
+                        color=purple),
+    
+    # Make additional changes (e.g., size, type, margins) to the plot's title, subtitle and caption and the legend title and text here. 
+    plot.title = element_text(size=18,
+                              face="bold"
+                              ),
+    
+    plot.subtitle = element_text(size=12,
+                                 margin=margin(9,0,9,0)
+                                 ),
+    
+    plot.caption = element_text(size=10),
+    
+    # Legend text format:
+    legend.title = element_text(size=12, face = "bold"),
+    
+    legend.text = element_text(size=12),
+    
+    # Axis text format:
+    axis.title = element_text(size=12),
+    # SET AS BLANK?
+    
+    # Notice that the font is pulled through in the text hierarchy but colour is not for axis.text or strip.text
+    axis.text = element_text(size=10),
+  
+    # Strip text 
+    strip.text = element_text(size=12, hjust = 0)
+    )
+
+```
+
+
+## Plot Lines
+
+You use element_line() to modify line elements in theme(). 
+
+```{r, eval=FALSE, include=TRUE}
+element_line(
+   colour = NULL,
+   size = NULL,
+   linetype = NULL,
+   lineend = NULL,
+   color = NULL,
+   arrow = NULL,
+   inherit.blank = FALSE
+)
+```
+
+
+```{r}
+# Colours
+  dark_green <- "#002D30"
+  light_grey <- "#F2F2F2"
+  green_blue <- "#007883"
+  light_green <- "#4FE18F"
+  blue <- "#00C3D6"
+  pink <- "#FF709D"
+  purple <- "#A361FF"
+  orange <- "#ffa45a"
+# Font  
+  font <- "Derailed"
+
+# The plot
+ggplot(data = iris) +
+  geom_point(mapping = aes(x = Petal.Length, y = Petal.Width, colour = Species)) +
+  facet_grid(cols = vars(Species)) + 
+  labs(title = "Differences in flower size by iris species",
+       subtitle = "Plot of petal width by petal length",
+       caption = "Data source: R") +
+
+  # Theme  
+  theme(
+    # Title text format:
+    # Set the font family and font colour 
+    text = element_text(family=font,
+                        color=dark_green),
+    plot.title = element_text(size=18,
+                              face="bold"),
+    plot.subtitle = element_text(size=12,
+                                 margin=margin(9,0,9,0)),
+    plot.caption = element_text(size=10),
+    legend.title = element_text(size=12, face = "bold"),
+    legend.text = element_text(size=12),
+    axis.title = element_blank(),
+    axis.text = element_text(size=10, colour = dark_green),
+    strip.text = element_text(size=12, hjust = 0,  colour = dark_green),
+    
+    # You can use this to remove all lines from the plot
+    #line = element_blank(),
+    
+    # Update the axis ticks
+    axis.ticks = element_line(colour = pink, lineend = "round", size = 2),
+    axis.ticks.length = unit(.5, "cm"),
+    
+    # Update the axis lines
+    axis.line = element_line(colour = pink, lineend = "round", size = 2),
+    
+    # Update the grid lines
+    #panel.grid = element_line(colour = pink),
+    panel.grid.minor = element_line(colour = pink),
+    panel.grid.major = element_line(colour = purple)
+    )
+
+```
+
+
+## Plot Rectangles
+
+You use element_rect() to modify rectangle elements in theme(). 
+
+```{r, eval=FALSE, include=TRUE}
+element_rect(
+  fill = NULL,
+  colour = NULL,
+  size = NULL,
+  linetype = NULL,
+  color = NULL,
+  inherit.blank = FALSE
+)
+```
+
+
+```{r}
+# Colours
+  dark_green <- "#002D30"
+  light_grey <- "#F2F2F2"
+  green_blue <- "#007883"
+  light_green <- "#4FE18F"
+  blue <- "#00C3D6"
+  pink <- "#FF709D"
+  purple <- "#A361FF"
+  orange <- "#ffa45a"
+# Font  
+  font <- "Derailed"
+
+# The plot
+ggplot(data = iris) +
+  geom_point(mapping = aes(x = Petal.Length, y = Petal.Width, colour = Species)) +
+  facet_grid(cols = vars(Species)) + 
+  labs(title = "Differences in flower size by iris species",
+       subtitle = "Plot of petal width by petal length",
+       caption = "Data source: R") +
+
+  # Theme  
+  theme(
+    # Title text format:
+    # Set the font family and font colour 
+    text = element_text(family=font,
+                        color=dark_green),
+    plot.title = element_text(size=18,
+                              face="bold"),
+    plot.subtitle = element_text(size=12,
+                                 margin=margin(9,0,9,0)),
+    plot.caption = element_text(size=10),
+    legend.title = element_text(size=12, face = "bold"),
+    legend.text = element_text(size=12),
+    axis.title = element_blank(),
+    axis.text = element_text(size=10, colour = dark_green),
+    strip.text = element_text(size=12, hjust = 0,  colour = dark_green),
+    
+    # You can use this to remove all lines from the plot
+    #line = element_blank(),
+    
+    # Update the axis ticks
+    #axis.ticks = element_line(colour = pink, lineend = "round", size = 2),
+    #axis.ticks.length = unit(.5, "cm"),
+    
+    # Update the axis lines
+    #axis.line = element_line(colour = pink, lineend = "round", size = 2),
+    
+    # Update the grid lines
+    #panel.grid = element_line(colour = pink),
+    #panel.grid.minor = element_line(colour = pink),
+    panel.grid.major.y = element_line(colour = light_grey),
+    
+    # You can use this to remove all lines from the plot
+    rect = element_blank(),
+    
+    # legend back
+    legend.background = element_rect(colour = pink),
+    legend.key = element_rect(colour = pink),
+    legend.box.background = element_rect(colour = pink),
+    panel.background = element_rect(colour = pink),
+    #panel.border = element_rect(colour = light_grey),
+    plot.background = element_rect(colour = pink),
+    strip.background = element_rect(colour = pink),
+    )
+
+```
+
+
+
+
+
+```{r}
+ggplot(data = iris) +
+  geom_point(mapping = aes(x = Petal.Length, y = Petal.Width, colour = Species)) +
+  facet_grid(cols = vars(Species)) + 
+  labs(title = "Differences in flower size by iris species",
+       subtitle = "Plot of petal width by petal length",
+       caption = "Data source: R") +
+  nicd_style()
+
+```
+
+
+
+
+## 
+```{r}
+
+nicd_style <- function() {
+  
+  dark_green = "#002D30"
+  light_grey = "#F2F2F2"
+  green_blue = "#007883"
+  light_green = "#4FE18F"
+  blue = "#00C3D6"
+  pink = "#FF709D"
+  purple = "#A361FF"
+  orange= "#ffa45a"
+  
+  font <- "Derailed"
+
+  ggplot2::theme(
+
+  #Text format:
+  #This sets the font, size, type and colour of text for the chart's title
+  text = ggplot2::element_text(family=font,
+                            color=light_green),
+  plot.title = ggplot2::element_text(size=18,
+                            face="bold"),
+  #This sets the font, size, type and colour of text for the chart's subtitle, as well as setting a margin between the title and the subtitle
+  plot.subtitle = ggplot2::element_text(size=12,
+                               margin=ggplot2::margin(9,0,9,0)),
+  plot.caption = ggplot2::element_text(size=12),
+  #This leaves the caption text element empty, because it is set elsewhere in the finalise plot function
+
+  #Legend format
+  #This sets the position and alignment of the legend, removes a title and backround for it and sets the requirements for any text within the legend. The legend may often need some more manual tweaking when it comes to its exact position based on the plot coordinates.
+  legend.position = "top",
+  legend.text.align = 0,
+  legend.background = ggplot2::element_blank(),
+  #legend.title = ggplot2::element_blank(),
+  legend.key = ggplot2::element_blank(),
+  legend.text = ggplot2::element_text(size=12),
+
+  #Axis format
+  #This sets the text font, size and colour for the axis test, as well as setting the margins and removes lines and ticks. In some cases, axis lines and axis ticks are things we would want to have in the chart - the cookbook shows examples of how to do so.
+  #axis.title = ggplot2::element_blank(),
+  axis.text = ggplot2::element_text(size=8, colour = orange),
+  axis.text.x = ggplot2::element_text(margin=ggplot2::margin(5, b = 10)),
+  axis.ticks = ggplot2::element_blank(),
+  axis.line = ggplot2::element_blank(),
+
+  #Grid lines
+  #This removes all minor gridlines and adds major y gridlines. In many cases you will want to change this to remove y gridlines and add x gridlines. The cookbook shows you examples for doing so
+  panel.grid.minor = ggplot2::element_blank(),
+  panel.grid.major.y = ggplot2::element_line(color=light_grey),
+  panel.grid.major.x = ggplot2::element_blank(),
+
+  #Blank background
+  #This sets the panel background as blank, removing the standard grey ggplot background colour from the plot
+  panel.background = ggplot2::element_blank(),
+
+  #Strip background (#This sets the panel background for facet-wrapped plots to white, removing the standard grey ggplot background colour and sets the title size of the facet-wrap title to font size 22)
+  strip.background = ggplot2::element_rect(fill="white"),
+  strip.text = ggplot2::element_text(size  = 12,  hjust = 0, colour = pink)
+  )
+  }
+
+```
+
+
+## Create your own colour palette 
+This exercise was taken from https://drsimonj.svbtle.com/creating-corporate-colour-palettes-for-ggplot2
+
+### Define your colours
+Insert your corporate colour palette or define your own. 
+
+This [Color Kit website](https://colorkit.co/palettes/) is useful for colour inspiration.
+
+```{r}
+# National Innovtion Centre for Data colour palette
+colours <- c(
+  light_green = "#4FE18F",
+  dark_green = "#002D30",
+  light_grey = "#F2F2F2",
+  blue = "#00C3D6",
+  pink = "#FF709D",
+  purple = "#A361FF",
+  green_blue = "#007883", 
+  orange= "#ffa45a"
+)
+
+
+colorBlindness::displayAllColors(colours)
+```
+
+
+
+```{r}
+# Create a function to extract the hex codes
+cols <- function(...) {
+  cols <- c(...)
+
+  if (is.null(cols))
+    return (colours)
+
+  colours[cols]
+}
+
+
+cols(c("light_green", "pink", "yellow"))
+```
+
+Use this function to create some colour palettes.
+```{r}
+palettes <- list(
+  main = cols("light_green", "blue", "pink", "purple"),
+  cool = cols("light_green", "blue", "green_blue"),
+  warm = cols("pink", "purple", "orange")
+)
+
+```
+
+You can use an existing function called clor Create a function to access the palettes and create
+```{r}
+#pal("cool", reverse = TRUE)(10)
+
+colorRampPalette(palettes[["cool"]])(5)
+```
+
+
+```{r}
+ggplot(data = iris) +
+  geom_point(mapping = aes(x = Petal.Length, y = Petal.Width, colour = Species)) + 
+  labs(title = "Differences in flower size by iris species",
+       subtitle = "Plot of petal width by petal length",
+       caption = "Data source: R")
+  
+```
+
+```{r}
+ggplot(data = iris) +
+  geom_point(mapping = aes(x = Petal.Length, y = Petal.Width)) +
+  facet_grid(cols = vars(Species)) + 
+  labs(title = "Differences in flower size by iris species",
+       subtitle = "Plot of petal width by petal length",
+       caption = "Data source: R")
+
+```
+
+```{r}
+
+#' Add bbc theme to ggplot chart
+#'
+#' This function allows you to add the bbc theme to your ggplotgraphics.
+#' @keywords bbc_style
+#' @export
+#' @examples
+#' line <- ggplot(line_df, aes(x = year, y = lifeExp)) +
+#' geom_line(colour = "#007f7f", size = 1) +
+#' geom_hline(yintercept = 0, size = 1, colour="#333333") +
+#' bbc_style()
+
+bbc_style <- function() {
+  font <- "Helvetica"
+
+  ggplot2::theme(
+
+  #Text format:
+  #This sets the font, size, type and colour of text for the chart's title
+  plot.title = ggplot2::element_text(family=font,
+                            size=28,
+                            face="bold",
+                            color="#222222"),
+  #This sets the font, size, type and colour of text for the chart's subtitle, as well as setting a margin between the title and the subtitle
+  plot.subtitle = ggplot2::element_text(family=font,
+                               size=22,
+                               margin=ggplot2::margin(9,0,9,0)),
+  plot.caption = ggplot2::element_blank(),
+  #This leaves the caption text element empty, because it is set elsewhere in the finalise plot function
+
+  #Legend format
+  #This sets the position and alignment of the legend, removes a title and backround for it and sets the requirements for any text within the legend. The legend may often need some more manual tweaking when it comes to its exact position based on the plot coordinates.
+  legend.position = "top",
+  legend.text.align = 0,
+  legend.background = ggplot2::element_blank(),
+  legend.title = ggplot2::element_blank(),
+  legend.key = ggplot2::element_blank(),
+  legend.text = ggplot2::element_text(family=font,
+                             size=18,
+                             color="#222222"),
+
+  #Axis format
+  #This sets the text font, size and colour for the axis test, as well as setting the margins and removes lines and ticks. In some cases, axis lines and axis ticks are things we would want to have in the chart - the cookbook shows examples of how to do so.
+  axis.title = ggplot2::element_blank(),
+  axis.text = ggplot2::element_text(family=font,
+                           size=18,
+                           color="#222222"),
+  axis.text.x = ggplot2::element_text(margin=ggplot2::margin(5, b = 10)),
+  axis.ticks = ggplot2::element_blank(),
+  axis.line = ggplot2::element_blank(),
+
+  #Grid lines
+  #This removes all minor gridlines and adds major y gridlines. In many cases you will want to change this to remove y gridlines and add x gridlines. The cookbook shows you examples for doing so
+  panel.grid.minor = ggplot2::element_blank(),
+  panel.grid.major.y = ggplot2::element_line(color="#cbcbcb"),
+  panel.grid.major.x = ggplot2::element_blank(),
+
+  #Blank background
+  #This sets the panel background as blank, removing the standard grey ggplot background colour from the plot
+  panel.background = ggplot2::element_blank(),
+
+  #Strip background (#This sets the panel background for facet-wrapped plots to white, removing the standard grey ggplot background colour and sets the title size of the facet-wrap title to font size 22)
+  strip.background = ggplot2::element_rect(fill="white"),
+  strip.text = ggplot2::element_text(size  = 22,  hjust = 0)
+  )
+  }
+
+```
+
+
+
