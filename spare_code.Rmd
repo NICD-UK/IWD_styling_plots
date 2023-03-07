@@ -1,8 +1,8 @@
 ---
-title: "Practical ggplot2"
-output:
-  html_document: default
-
+title: "spare_code"
+author: "Louise Braithwaite"
+date: '2023-03-06'
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -329,6 +329,432 @@ Other coordinate systems
 Generating a standard theme based upon good design principals should enable you to work more efficiently. 
 
 
+### Rectangles, Lines and Text 
+
+When working with theme you need to consider a plot as being made up of:
+
+- Rectangles 
+- Lines
+- Text 
+
+#### Rectangles
+ - <span style="color: #FF709D;">plot background</span>
+ - <span style="color: #002D30;">panel background</span>
+ - <span style="background-color: black; color: white">legend.key
+ - <span style="color: #ffa45a;">legend background</span>
+ - <span style="color: #A361FF;">legend box background</span>
+
+```{r, include=TRUE, echo=FALSE}
+
+# Colours
+  dark_green <- "#002D30"
+  light_grey <- "#F2F2F2"
+  green_blue <- "#007883"
+  light_green <- "#4FE18F"
+  blue <- "#00C3D6"
+  pink <- "#FF709D"
+  purple <- "#A361FF"
+  orange <- "#ffa45a"
+# Font  
+#  font <- "Derailed"
+
+# The plot
+ggplot(data = iris) +
+  geom_point(mapping = aes(x = Petal.Length, y = Petal.Width, colour = Species)) +
+  labs(title = "Differences in flower size by iris species",
+       subtitle = "Plot of petal width by petal length",
+       caption = "Data source: R") +
+
+  # Theme  
+  theme(
+    # You can use this to remove all lines from the plot
+    #rect = element_blank(),
+    
+    # Plot rectangle format:
+    plot.background = element_rect(fill = pink),
+    
+    # Panel rectangle format:
+    panel.background = element_rect(fill = dark_green),
+    #panel.border = element_rect(fill = light_grey, colour = pink), # you probably will never need to use this
+    
+    legend.key = element_rect(fill = "white"),
+    legend.background = element_rect(fill = orange),
+    legend.margin = margin(9,9,9,9),
+    
+    legend.box.background = element_rect(fill = purple, colour = purple),
+    legend.box.margin = margin(9,9,9,9),
+    )
+
+```
+
+#### Lines
+ - <span style="color: #FF709D;">axis ticks</span>
+ - <span style="color: #ffa45a;">axis line x</span>
+ - <span style="color: #4FE18F;">axis line y</span>
+ - <span style="color: #A361FF;">panel grid minor</span>
+ - <span style="color: #00C3D6;">panel grid major</span>
+
+```{r, include=TRUE, echo=FALSE}
+
+# Colours
+  dark_green <- "#002D30"
+  light_grey <- "#F2F2F2"
+  green_blue <- "#007883"
+  light_green <- "#4FE18F"
+  blue <- "#00C3D6"
+  pink <- "#FF709D"
+  purple <- "#A361FF"
+  orange <- "#ffa45a"
+# Font  
+#  font <- "Derailed"
+
+# The plot
+ggplot(data = iris) +
+  geom_point(mapping = aes(x = Petal.Length, y = Petal.Width, colour = Species)) +
+  labs(title = "Differences in flower size by iris species",
+       subtitle = "Plot of petal width by petal length",
+       caption = "Data source: R") +
+
+  # Theme  
+  theme(
+    # You can use this to remove all lines from the plot
+    #line = element_blank(),
+    
+    # Update the axis ticks
+    axis.ticks = element_line(colour = pink, lineend = "round", size = 2),
+    axis.ticks.length = unit(.5, "cm"),
+    
+    # Update the axis lines
+    axis.line.x = element_line(colour = orange, lineend = "round", size = 2),
+    axis.line.y = element_line(colour = light_green, lineend = "round", size = 2),
+    
+    # Update the grid lines
+    #panel.grid = element_line(colour = pink),
+    panel.grid.minor = element_line(colour = purple),
+    panel.grid.major = element_line(colour = blue)
+    )
+
+```
+
+#### Text
+ - <span style="color: #A361FF;">plot title</span>
+ - <span style="color: #00C3D6;">plot subtitle</span>
+ - <span style="color: #FF709D;">plot caption</span>
+ - <span style="color: #ffa45a;">legend title</span>
+ - <span style="color: #002D30;">legend text</span>
+  - <span style="color: #00C3D6;">axis title x</span>
+  - <span style="color: #4FE18F;">axis title y</span>
+ - <span style="color: #007883;">axis text</span>
+  - <span style="color: "black";">strip text</span>
+
+```{r, include=TRUE, echo=FALSE}
+
+# Colours
+  dark_green <- "#002D30"
+  light_grey <- "#F2F2F2"
+  green_blue <- "#007883"
+  light_green <- "#4FE18F"
+  blue <- "#00C3D6"
+  pink <- "#FF709D"
+  purple <- "#A361FF"
+  orange <- "#ffa45a"
+# Font  
+#  font <- "Derailed"
+
+# The plot
+ggplot(data = iris) +
+  geom_point(mapping = aes(x = Petal.Length, y = Petal.Width, colour = Species)) +
+  labs(title = "Differences in flower size by iris species",
+       subtitle = "Plot of petal width by petal length",
+       caption = "Data source: R") +
+
+  # Theme  
+  theme(
+    # Title text format:
+    # Set the font family and font colour 
+    #text = element_text(family=font,
+    #                    color=purple),
+    
+    # Make additional changes (e.g., size, type, margins) to the plot's title, subtitle and caption and the legend title and text here. 
+    plot.title = element_text(size=18,
+                              face="bold",
+                              colour = purple
+                              ),
+    
+    plot.subtitle = element_text(size=12,
+                                 margin=margin(9,0,9,0),
+                                 colour = blue
+                                 ),
+    
+    plot.caption = element_text(size=10,
+                                colour = pink),
+    
+    # Legend text format:
+    legend.title = element_text(size=12, 
+                                face = "bold",
+                                colour = orange),
+    
+    legend.text = element_text(size=12, 
+                               colour = dark_green),
+    
+    # Axis text format:
+    axis.title.y = element_text(size=12, 
+                              colour = light_green),
+    axis.title.x = element_text(size=12, 
+                              colour = blue),
+    # SET AS BLANK?
+    
+    # Notice that the font is pulled through in the text hierarchy but colour is not for axis.text or strip.text
+    axis.text = element_text(size=10,
+                             colour = green_blue),
+  
+    # Strip text 
+    strip.text = element_text(size=12, 
+                              hjust = 0,
+                              colour = orange)
+    )
+```
+
+
+## Key tips
+```{r, eval=FALSE, include=TRUE}
+# setting data and aes inside ggplot() sets it at the global layer. Setting it within the geom (e.g., geom_point()) sets if at the geom layer. Normally you would set the data at the global layer and the mapping in the geom layer
+
+# To MAP colours define inside aes(). To set colours define outside aes()
+
+# you can use expressions for mappings e.g. colour = eruptions < 3
+
+# geom histogram only needs one mapping as it calculates the y (this is the statistics layer that is creating the y-axis)
+
+# Geom layers are stacked in the order of the code
+
+# statistics means you don't have to pre-calculate all the values you want to plot. Sometimes the statistics are required. Sometimes it is a choice, e.g. you might have pre-calculated data
+
+```
+
+
+```{r}
+#font <- "Derailed"
+
+ggplot(data = iris) +
+ geom_point(mapping = aes(x = Sepal.Length, 
+                          y = Petal.Length, 
+                          colour = Petal.Length >2)) +
+  theme(
+    plot.title = ggplot2::element_text(#family=font,
+                            size=28,
+                            face="bold",
+                            color="#002D30"),
+  #This sets the font, size, type and colour of text for the chart's subtitle, as well as setting a margin between the title and the subtitle
+  plot.subtitle = ggplot2::element_text(#family=font,
+                               size=22,
+                               margin=ggplot2::margin(9,0,9,0)),
+  plot.caption = ggplot2::element_blank(),
+  #This leaves the caption text element empty, because it is set elsewhere in the finalise plot function
+
+  #Legend format
+  #This sets the position and alignment of the legend, removes a title and background for it and sets the requirements for any text within the legend. The legend may often need some more manual tweaking when it comes to its exact position based on the plot coordinates.
+  legend.position = "top",
+  legend.text.align = 0,
+  legend.background = ggplot2::element_blank(),
+  legend.title = ggplot2::element_blank(),
+  legend.key = ggplot2::element_blank(),
+  legend.text = ggplot2::element_text(#family=font,
+                             size=18,
+                             color="#002D30"),
+
+  #Axis format
+  #This sets the text font, size and colour for the axis test, as well as setting the margins and removes lines and ticks. In some cases, axis lines and axis ticks are things we would want to have in the chart - the cookbook shows examples of how to do so.
+  axis.title = ggplot2::element_blank(),
+  axis.text = ggplot2::element_text(#family=font,
+                           size=18,
+                           color="#002D30"),
+  axis.text.x = ggplot2::element_text(margin=ggplot2::margin(5, b = 10)),
+  axis.ticks = ggplot2::element_blank(),
+  axis.line = ggplot2::element_blank(),
+
+  #Grid lines
+  #This removes all minor gridlines and adds major y gridlines. In many cases you will want to change this to remove y gridlines and add x gridlines. The cookbook shows you examples for doing so
+  panel.grid.minor = ggplot2::element_blank(),
+  panel.grid.major.y = ggplot2::element_line(color="#cbcbcb"),
+  panel.grid.major.x = ggplot2::element_blank(),
+
+  #Blank background
+  #This sets the panel background as blank, removing the standard grey ggplot background colour from the plot
+  panel.background = ggplot2::element_blank(),
+
+  #Strip background (#This sets the panel background for facet-wrapped plots to white, removing the standard grey ggplot background colour and sets the title size of the facet-wrap title to font size 22)
+  strip.background = ggplot2::element_rect(fill="white"),
+  strip.text = ggplot2::element_text(size  = 22,  hjust = 0)
+  ) +
+  labs(title = "How life expectancy varies",
+       subtitle = "Distribution of life expectancy in 2007")
+
+```
+
+```{r}
+ggplot(data = iris) +
+ geom_point(mapping = aes(x = Sepal.Length, 
+                          y = Petal.Length, 
+                          colour = Petal.Length >2)) +
+  theme(
+    axis.title = element_text(colour = "#FF709D"),
+    plot.title = element_text(colour = "#FF709D")
+  ) +
+  labs(
+    title = "Axis Title",
+    subtitle = "Insert subtitle",
+    caption = "Insert caption",
+    tag = "Insert tag",
+    alt = "the is alternative text for the plot"
+  )
+
+```
+
+```{r}
+ggplot(data = iris) +
+ geom_point(mapping = aes(x = Sepal.Length, 
+                          y = Petal.Length, 
+                          colour = Petal.Length >2)) +
+  theme(
+    axis.text = element_text(colour = "#FF709D"),
+    plot.title = element_text(colour = "#FF709D")
+  ) +
+  labs(title = "Axis Text")
+
+```
+
+```{r}
+ggplot(data = iris) +
+ geom_point(mapping = aes(x = Sepal.Length, 
+                          y = Petal.Length, 
+                          colour = Petal.Length >2)) +
+  theme(
+    axis.ticks = element_line(colour = "#FF709D"),
+    plot.title = element_text(colour = "#FF709D")
+  ) +
+  labs(title = "Axis Ticks")
+
+```
+
+```{r}
+ggplot(data = iris) +
+ geom_point(mapping = aes(x = Sepal.Length, 
+                          y = Petal.Length, 
+                          colour = Petal.Length >2)) +
+  theme(
+    axis.ticks.length = unit(.5, "cm"),
+    axis.ticks = element_line(colour = "#FF709D"),
+    plot.title = element_text(colour = "#FF709D")
+  ) +
+  labs(title = "Axis Ticks Length")
+
+```
+
+```{r}
+ggplot(data = iris) +
+ geom_point(mapping = aes(x = Sepal.Length, 
+                          y = Petal.Length, 
+                          colour = Petal.Length >2)) +
+  theme(
+    axis.line = element_line(colour = "#FF709D"),
+    plot.title = element_text(colour = "#FF709D")
+  ) +
+  labs(title = "Axis Line")
+
+```
+
+
+```{r}
+ggplot(data = iris) +
+ geom_point(mapping = aes(x = Sepal.Length, 
+                          y = Petal.Length, 
+                          colour = Petal.Length >2)) +
+  theme(
+    panel.background = element_rect(fill = "#FF709D"),
+    plot.title = element_text(colour = "#FF709D")
+  ) +
+  labs(title = "Panel Background")
+
+```
+
+```{r}
+ggplot(data = iris) +
+ geom_point(mapping = aes(x = Sepal.Length, 
+                          y = Petal.Length, 
+                          colour = Petal.Length >2)) +
+  theme(
+    panel.grid	 = element_line(colour = "#FF709D"),
+    plot.title = element_text(colour = "#FF709D")
+  ) +
+  labs(title = "Panel Grid")
+
+```
+
+```{r}
+ggplot(data = iris) +
+ geom_point(mapping = aes(x = Sepal.Length, 
+                          y = Petal.Length, 
+                          colour = Petal.Length >2)) +
+  theme(
+    panel.grid.major = element_line(colour = "#FF709D"),
+    plot.title = element_text(colour = "#FF709D")
+  ) +
+  labs(title = "Panel Grid Major")
+
+```
+```{r}
+ggplot(data = iris) +
+ geom_point(mapping = aes(x = Sepal.Length, 
+                          y = Petal.Length, 
+                          colour = Petal.Length >2)) +
+  theme(
+    panel.grid.minor =  element_line(colour = "#FF709D"),
+    plot.title = element_text(colour = "#FF709D")
+  ) +
+  labs(title = "Panel Grid Minor")
+
+```
+
+```{r}
+ggplot(data = iris) +
+ geom_point(mapping = aes(x = Sepal.Length, 
+                          y = Petal.Length, 
+                          colour = Petal.Length >2)) +
+  theme(
+    plot.background =  element_rect(fill = "#FF709D"),
+    plot.title = element_text(colour = "black")
+  ) +
+  labs(title = "Plot Background")
+
+```
+
+```{r}
+ggplot(data = iris) +
+ geom_point(mapping = aes(x = Sepal.Length, 
+                          y = Petal.Length, 
+                          colour = Petal.Length >2)) +
+  theme(
+    panel.grid.minor =  element_line(colour = "#FF709D"),
+    plot.title = element_text(colour = "#FF709D")
+  ) +
+  labs(title = "Panel Grid Minor")
+
+```
+
+```{r}
+ggplot(data = iris) +
+ geom_point(mapping = aes(x = Sepal.Length, 
+                          y = Petal.Length, 
+                          colour = Petal.Length >2)) +
+  theme(
+    line = element_line(colour = "purple"),
+    rect = element_rect(fill= "#FF709D"),
+    text = element_text(colour = "blue")
+  ) +
+  labs(title = "Legend Background")
+
+```
 
 
 ```{r eval=FALSE}
@@ -446,18 +872,7 @@ The element_ functions specify the display of how non-data components of the plo
 element_blank()
 ```
 
-
-### Rectangles, Lines and Text 
-
-When working with theme you need to consider a plot as being made up of:
-
-- Rectangles 
-- Lines
-- Text 
-
-#### Rectangles
-
-#### element_rect()
+## element_rect()
 
 ```{r, eval=FALSE, include=TRUE}
 element_rect(
@@ -471,59 +886,7 @@ element_rect(
 ```
 
 
- - <span style="color: #FF709D;">plot background</span>
- - <span style="color: #002D30;">panel background</span>
- - <span style="background-color: black; color: white">legend.key
- - <span style="color: #ffa45a;">legend background</span>
- - <span style="color: #A361FF;">legend box background</span>
-
-```{r, include=TRUE, echo=FALSE}
-
-# Colours
-  dark_green <- "#002D30"
-  light_grey <- "#F2F2F2"
-  green_blue <- "#007883"
-  light_green <- "#4FE18F"
-  blue <- "#00C3D6"
-  pink <- "#FF709D"
-  purple <- "#A361FF"
-  orange <- "#ffa45a"
-# Font  
-#  font <- "Derailed"
-
-# The plot
-ggplot(data = iris) +
-  geom_point(mapping = aes(x = Petal.Length, y = Petal.Width, colour = Species)) +
-  labs(title = "Differences in flower size by iris species",
-       subtitle = "Plot of petal width by petal length",
-       caption = "Data source: R") +
-
-  # Theme  
-  theme(
-    # You can use this to remove all lines from the plot
-    #rect = element_blank(),
-    
-    # Plot rectangle format:
-    plot.background = element_rect(fill = pink),
-    
-    # Panel rectangle format:
-    panel.background = element_rect(fill = dark_green),
-    #panel.border = element_rect(fill = light_grey, colour = pink), # you probably will never need to use this
-    
-    legend.key = element_rect(fill = "white"),
-    legend.background = element_rect(fill = orange),
-    legend.margin = margin(9,9,9,9),
-    
-    legend.box.background = element_rect(fill = purple, colour = purple),
-    legend.box.margin = margin(9,9,9,9),
-    )
-
-```
-
-#### Lines
-
-
-#### element_line()
+## element_line()
 
 ```{r, eval=FALSE, include=TRUE}
 element_line(
@@ -536,57 +899,8 @@ element_line(
    inherit.blank = FALSE
 )
 ```
- - <span style="color: #FF709D;">axis ticks</span>
- - <span style="color: #ffa45a;">axis line x</span>
- - <span style="color: #4FE18F;">axis line y</span>
- - <span style="color: #A361FF;">panel grid minor</span>
- - <span style="color: #00C3D6;">panel grid major</span>
 
-```{r, include=TRUE, echo=FALSE}
-
-# Colours
-  dark_green <- "#002D30"
-  light_grey <- "#F2F2F2"
-  green_blue <- "#007883"
-  light_green <- "#4FE18F"
-  blue <- "#00C3D6"
-  pink <- "#FF709D"
-  purple <- "#A361FF"
-  orange <- "#ffa45a"
-# Font  
-#  font <- "Derailed"
-
-# The plot
-ggplot(data = iris) +
-  geom_point(mapping = aes(x = Petal.Length, y = Petal.Width, colour = Species)) +
-  labs(title = "Differences in flower size by iris species",
-       subtitle = "Plot of petal width by petal length",
-       caption = "Data source: R") +
-
-  # Theme  
-  theme(
-    # You can use this to remove all lines from the plot
-    #line = element_blank(),
-    
-    # Update the axis ticks
-    axis.ticks = element_line(colour = pink, lineend = "round", size = 2),
-    axis.ticks.length = unit(.5, "cm"),
-    
-    # Update the axis lines
-    axis.line.x = element_line(colour = orange, lineend = "round", size = 2),
-    axis.line.y = element_line(colour = light_green, lineend = "round", size = 2),
-    
-    # Update the grid lines
-    #panel.grid = element_line(colour = pink),
-    panel.grid.minor = element_line(colour = purple),
-    panel.grid.major = element_line(colour = blue)
-    )
-
-```
-
-#### Text
-
-#### element_text()
+## element_text()
 
 ```{r eval=FALSE}
 element_text(
@@ -604,85 +918,6 @@ element_text(
   inherit.blank = FALSE
 )
 ```
-
- - <span style="color: #A361FF;">plot title</span>
- - <span style="color: #00C3D6;">plot subtitle</span>
- - <span style="color: #FF709D;">plot caption</span>
- - <span style="color: #ffa45a;">legend title</span>
- - <span style="color: #002D30;">legend text</span>
-  - <span style="color: #00C3D6;">axis title x</span>
-  - <span style="color: #4FE18F;">axis title y</span>
- - <span style="color: #007883;">axis text</span>
-  - <span style="color: "black";">strip text</span>
-
-```{r, include=TRUE, echo=FALSE}
-
-# Colours
-  dark_green <- "#002D30"
-  light_grey <- "#F2F2F2"
-  green_blue <- "#007883"
-  light_green <- "#4FE18F"
-  blue <- "#00C3D6"
-  pink <- "#FF709D"
-  purple <- "#A361FF"
-  orange <- "#ffa45a"
-# Font  
-#  font <- "Derailed"
-
-# The plot
-ggplot(data = iris) +
-  geom_point(mapping = aes(x = Petal.Length, y = Petal.Width, colour = Species)) +
-  labs(title = "Differences in flower size by iris species",
-       subtitle = "Plot of petal width by petal length",
-       caption = "Data source: R") +
-
-  # Theme  
-  theme(
-    # Title text format:
-    # Set the font family and font colour 
-    #text = element_text(family=font,
-    #                    color=purple),
-    
-    # Make additional changes (e.g., size, type, margins) to the plot's title, subtitle and caption and the legend title and text here. 
-    plot.title = element_text(size=18,
-                              face="bold",
-                              colour = purple
-                              ),
-    
-    plot.subtitle = element_text(size=12,
-                                 margin=margin(9,0,9,0),
-                                 colour = blue
-                                 ),
-    
-    plot.caption = element_text(size=10,
-                                colour = pink),
-    
-    # Legend text format:
-    legend.title = element_text(size=12, 
-                                face = "bold",
-                                colour = orange),
-    
-    legend.text = element_text(size=12, 
-                               colour = dark_green),
-    
-    # Axis text format:
-    axis.title.y = element_text(size=12, 
-                              colour = light_green),
-    axis.title.x = element_text(size=12, 
-                              colour = blue),
-    # SET AS BLANK?
-    
-    # Notice that the font is pulled through in the text hierarchy but colour is not for axis.text or strip.text
-    axis.text = element_text(size=10,
-                             colour = green_blue),
-  
-    # Strip text 
-    strip.text = element_text(size=12, 
-                              hjust = 0,
-                              colour = orange)
-    )
-```
-
 
 
 
