@@ -34,10 +34,17 @@ This approach means you are not limited to a set of predefined data visualizatio
 
 In the sections below we will use the Grammar of Graphics framework to explore how to create plots with ggplot2.
 
-### Dependencies
+### Dependencies and data sets
+This document comes with a list of required libraries: _'ggplot2'_ and _'dplyr'_. We will use two of the build-in data sets _'diamonds'_ and _'iris'_.
+```{r message=FALSE, echo=FALSE}
+packages <- c(
+  'ggplot2',
+  'dplyr'
+)
 
-```{r message=FALSE}
-# load libraries
+# Uncomment the next lines (remove the first #) to install the packages
+# install.packages(packages)
+# load standard libraries
 library(ggplot2)
 library(dplyr)
 
@@ -46,16 +53,15 @@ data("diamonds")
 data("iris")
 ```
 
+### The grammar of graphics: Data  
+##### **DATA** / mapping / statistics / scales / geometries / facets / coordinates / theme
 
-### Data  
-##### DATA / mapping / statistics / scales / geometries / facets / coordinates / theme
-
-- ggplot() initialises a ggplot object
+- `ggplot()` initialises a ggplot object
 - It can be used to declare:
   - the input data frame  *(__data__)*
   - plot aesthetics *(__mapping__)*
 - The data should be a tidy data frame format
-- Use + to combine ggplot2 elements 
+- Use `+` to combine ggplot2 elements 
 - Adding a geometry creates a plot *(__geometries__)*
 
 
@@ -96,12 +102,12 @@ ggplot(iris) +
 > This is because there are a lot of sensible defaults written into the ggplot2 package that handles the other elements of the plot.  
 
 
-### Mapping  
-##### data / MAPPING / statistics / scales / geometries / facets / coordinates / theme
+### The grammar of graphics: Mapping  
+##### data / **MAPPING** / statistics / scales / geometries / facets / coordinates / theme
 
 - Aesthetic mappings link variables in the data to graphical properties in the geometries. 
 - They inform the graphics of which variables should be prepresented by the x and y-axes, whether a variable should be represented by a colour, size or shape etc.
-- Different geoms have different mapping requirements (e.g., geom_point() requires x and y values and geom_histogram() only requires x values). If you are unsure of a geom's mapping requirements you can check the 'Aesthetics' section of the help documentation (e.g., ?geom_point). 
+- Different geoms have different mapping requirements (e.g., `geom_point()` requires `x` and `y` values and `geom_histogram()` only requires `x` values). If you are unsure of a geom's mapping requirements you can check the 'Aesthetics' section of the help documentation (e.g., `?geom_point`). 
 
 ```{r}
 # Mapping 1
@@ -147,10 +153,32 @@ ggplot(data = iris) +
 
 > **_Remember:_** If you want to map a colour from the data put it in aes() if you want to set a colour or size put it outside aes().
 
+* * *
+
+### Exercises
+
+Update the code to make the points larger purple triangles and slightly transparent.
+
+```{r}
+ggplot(iris) + 
+  geom_point(aes(x = Sepal.Length, y = Petal.Length))
+```
 
 
-### Geometries   
-##### data / mapping / statistics / scales / GEOMETRIES / facets / coordinates / theme
+* * *
+
+Colour the two distributions in the histogram with different colours.
+
+```{r message=FALSE}
+ggplot(iris) + 
+  geom_histogram(aes(x = Petal.Length))
+```
+
+* * *
+
+
+### The grammar of graphics: Geometries   
+##### data / mapping / statistics / scales / **GEOMETRIES** / facets / coordinates / theme
 
 - Geometries take the scale values and plots them according to a specific geometry
 - The same data input can have a vast array of geometric representations
@@ -174,36 +202,14 @@ ggplot(data = iris) +
 ```
 
 
+### The grammar of graphics: Statistics  
+##### data / mapping / **STATISTICS** / scales / geometries / facets / coordinates / theme
 
-### Exercises
-```{r message=FALSE}
-# Colour the two different distributions in two different colours 
-ggplot(data = iris) +
-  geom_histogram(mapping = aes(x=Petal.Length, fill = Petal.Length>2))
-
-# Colour the distributions in the histogram by whether Petal.Width is greater than 2 
-# For each layer there is a position adjustment. For geom_histogram() the default is stack.
-ggplot(data = iris) +
-  geom_histogram(mapping = aes(x=Petal.Length, fill = Petal.Width>2), position = 'stack')
-
-ggplot(data = iris) +
-  geom_histogram(mapping = aes(x=Petal.Length, fill = Petal.Width>2), position = 'identity', alpha = 0.3)
-
-
-ggplot(data = iris) +
-  geom_histogram(mapping = aes(x=Petal.Length, fill = Petal.Width>2), position = 'dodge')
-
-# Add a line that separates the two point distributions. See `?geom_abline` for how to draw straight lines from a slope and intercept.
-ggplot(data = iris) +
-  geom_point(mapping = aes(x = Sepal.Length, y = Petal.Length)) +
-  geom_abline(slope = -0.2, intercept = 3.5)
-```
-
-### Statistics  
-##### data / mapping / STATISTICS / scales / geometries / facets / coordinates / theme
-
-lues. For example, a bar chart calculates counts and box plots calculate a range of distribution values. The statistics part refers to the calculations that are happening to transform your raw data into the values we want to display on the plot. Every geom has a default statistic. 
-[often people think in geoms - you think you want to add bars rather than visualise counts]
+The statistics part refers to the calculations that are happening to transform your raw data into the values we want to display on the plot. For example, a bar chart calculates counts and box plots calculate a range of distribution values. 
+- Every geometry has a default statistic.
+- Every statistic has a default geometry
+- Both can be used but people are used to thinking in geometries. You visualise bars rather than counts.
+- You can access the values generated through the stat by using the `after_stat()` function.
 ```{r}
 #geom_bar() uses stat_count() by default 
 ggplot(data = diamonds) +
@@ -220,6 +226,7 @@ ggplot(data = diamonds) +
   stat_count(mapping = aes(x=cut), geom = 'point') +
   ggtitle("stat_count()")
 
+# You can calculate the statistics yourself and plot the results 
 diamonds_counted_by_cut = diamonds %>%
   group_by(cut) %>%
   summarise(count = n())
@@ -229,26 +236,21 @@ ggplot(data = diamonds_counted_by_cut) +
            stat = 'identity') + # identity stat doesn't compute anything 
   ggtitle("stat = 'identity")
 
-# ggplot2 As this is often used there has been a 
 # ggplot2 provide geometries for the most frequently used combinations of statistics and geometries. For example, geom_col() is geom_bar() with the stat set to "identity".
 ggplot(data = diamonds_counted_by_cut) +
   geom_col(mapping = aes(x=cut, y=count)) +
   ggtitle("geom_col()")
   
-
-```
-You can access the values generated through the stat by using the after_stat() function.
-```{r}
-#?stat
-
+# You can access the values generated through the stat by using the after_stat() function.
+# Here we will change the counts to percentages
 #geom_bar() uses stat_count() by default 
-plot = ggplot(data = diamonds) +
+ggplot(data = diamonds) +
   geom_bar(mapping = 
              aes(
                x = cut,
                y = after_stat(100 * count / sum(count))
                )
-           ) #+ labs(y = "Percentage")
+           ) + labs(y = "Percentage")
 
 # Computed variables are provided in the stat_ documentation
 # ?stat_count 
@@ -256,29 +258,58 @@ plot = ggplot(data = diamonds) +
 # ?stat_boxplot
 ```
 
-### Stat Exercises
+* * *
+
+### Exercise
+
+Use `stat_summary()` to add a red dot at the mean `depth` for each group
+
 ```{r}
-#Use `stat_summary()` to add a red dot at the mean `hwy` for each group
+ggplot(diamonds) + 
+  geom_jitter(aes(x = cut, y = depth), width = 0.3)
+```
+
+Hint: You will need to change the default geom of `stat_summary()`
+
+
+### The grammar of graphics: Scales  
+##### data / mapping / statistics / **SCALES** / geometries / facets / coordinates / theme
+
+Scales map our input data to the graphical output. 
+Scales define how the mapping you specify inside `aes()` should happen. 
+All mappings have an associated scale even if not specified.
+For example, when you assign a variable to `colour` it determines what kind of values they are (discrete or continuous) and scales them accordingly. 
+
+```{r}
 ggplot(mpg) + 
-  geom_jitter(aes(x = class, y = hwy), width = 0.2) +
-  stat_summary(aes(x = class, y = hwy), geom = 'point', fun = mean, colour = 'red')
+  geom_point(aes(x = displ, y = hwy, colour = class))
 ```
 
-
-### Scales  
-##### data / mapping / statistics / SCALES / geometries / facets / coordinates / theme
-
-A scale that maps our input data to the graphical output. For example, we would like our categories to be represented by colours and numbers by position on the x or y axis.  
-
-When you assign a variable to colour it determines what kind of values are there. Discrete data maps a discrete colour scheme to it. 
+take control by adding one explicitly. All scales follow the same naming 
+conventions.
 
 ```{r}
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy, colour = class)) +
+  scale_color_manual(values = c("pink", "purple", "blue", "red", "green", "navy", "yellow")) #+
+  #scale_colour_brewer(type = 'qual')
+```
 
+Positional mappings (x and y) also have associated scales.
+
+```{r}
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy)) + 
+  scale_x_continuous(breaks = c(3, 5, 6)) + 
+  scale_y_continuous(trans = 'log10')
 ```
 
 
-### Facets  
-##### data / mapping / statistics / scales / geometries / FACETS / coordinates / theme  
+
+
+
+### The grammar of graphics: Facets  
+##### data / mapping / statistics / scales / geometries / **FACETS** / coordinates / theme  
 - Facets divide a plot into subplots based on the values of one or more discrete values. 
 - It is a good way to avoid overplotting.
 - They should not be used to combine separate plots.
@@ -288,8 +319,8 @@ You may wish to have multiple plotting areas. It is the layout of your subplots 
 # ~ take the value and map to panel
 ```
 
-### Coordinates  
-##### data / mapping / statistics / scales / geometries / facets / COORDINATES / theme 
+### The grammar of graphics: Coordinates  
+##### data / mapping / statistics / scales / geometries / facets / **COORDINATES** / theme 
 
 - the coordinate system modifies the x and y values
 The scaled positions are passed through the coordinate system. You often don't think about it as we are used to the using the cartesian coordinate system but if you work in mapping you will be more familiar with other coordinate systems. It is specific to positional asethetic.
@@ -311,8 +342,8 @@ Other coordinate systems
 
 ```
 
-### Theme   
-##### data / mapping / statistics / scales / geometries / facets / coordinates / THEME 
+### The grammar of graphics: Theme   
+##### data / mapping / statistics / scales / geometries / facets / coordinates / **THEME** 
 
 - Stylistic changes to the plot not related to the data. 
 - In ggplot2 theme() is hierarchical in nature
@@ -323,14 +354,9 @@ Other coordinate systems
 
 
 > **Why focus on styling?**
+> Decision making is the key competency in data visualisation. We need to make effective decisions efficiently. We can use a design process to facilitate effective decision making and we can adopt a standard theme, based upon good design principals, to streamline the final presentation work. 
 
-> Decision making is the key competency in data visualization: namely, effective decisions, efficiently made. We can use a design process to facilitate this.
-
-Generating a standard theme based upon good design principals should enable you to work more efficiently. 
-
-
-
-
+### `theme()` arguments
 ```{r eval=FALSE}
 theme(
   line,
@@ -432,32 +458,24 @@ theme(
 ```
 
 
-## The Element Theme
+### Element functions
 
-The element_ functions specify the display of how non-data components of the plot are drawn.
-
-- element_blank(): draws nothing, and assigns no space
-- element_rect(): borders and backgrounds
-- element_line(): lines
-- element_text(): text
-
-## element_blank()
-```{r eval=FALSE}
-element_blank()
-```
-
-
-### Rectangles, Lines and Text 
-
-When working with theme you need to consider a plot as being made up of:
+`theme()` views plots as a mixture:
 
 - Rectangles 
 - Lines
 - Text 
+- Empty space
 
-#### Rectangles
+The `element_` functions specify the display of how non-data components of the plot are drawn.
 
-#### element_rect()
+- `element_blank()` draws nothing, and assigns no space
+- `element_rect()` borders and backgrounds
+- `element_line()` lines
+- `element_text()` text
+
+### Rectangles
+`element_rect()`
 
 ```{r, eval=FALSE, include=TRUE}
 element_rect(
@@ -520,10 +538,8 @@ ggplot(data = iris) +
 
 ```
 
-#### Lines
-
-
-#### element_line()
+### Lines
+`element_line()`
 
 ```{r, eval=FALSE, include=TRUE}
 element_line(
@@ -584,9 +600,8 @@ ggplot(data = iris) +
 
 ```
 
-#### Text
-
-#### element_text()
+### Text
+`element_text()`
 
 ```{r eval=FALSE}
 element_text(
@@ -683,8 +698,84 @@ ggplot(data = iris) +
     )
 ```
 
+### Exercise
+For this exercise we will work with the following example plot. 
+```{r}
+ggplot(data = iris) +
+  geom_point(mapping = aes(x = Petal.Length, y = Petal.Width, colour = Species)) +
+  facet_grid(cols = vars(Species)) + 
+  labs(title = "Differences in flower size by iris species",
+       subtitle = "Plot of petal width by petal length",
+       caption = "Data source: R")
 
+```
 
+* * * 
+
+Task: 
+- Review the [`theme()` documentation](https://ggplot2.tidyverse.org/reference/theme.html).
+- update the theme below
+
+```{r}
+ggplot(data = iris) +
+  geom_point(mapping = aes(x = Petal.Length, y = Petal.Width, colour = Species)) +
+  facet_grid(cols = vars(Species)) + 
+  labs(title = "Differences in flower size by iris species",
+       subtitle = "Plot of petal width by petal length",
+       caption = "Data source: R") +
+  theme(
+    
+    # RECTANGLES
+    # element_rect()
+    #plot.background = element_rect(),
+    #panel.background = element_rect(),
+    
+    #legend.key = element_rect(),
+    #legend.background = element_rect(),
+    #legend.margin = margin(),
+    #legend.position(),
+    #legend.direction(),
+    #legend.justification(),
+    
+    #legend.box.background = element_rect(),
+    #legend.box.margin = margin(),
+    
+    #panel.spacing(),
+    
+    # LINES
+    #axis.ticks = element_line(),
+    #axis.ticks.length = unit(.5, "cm"),
+
+    #axis.line = element_line()
+    #axis.line.x = element_line(),
+    #axis.line.y = element_line(),
+    
+    #panel.grid = element_line(),
+    #panel.grid.minor = element_line(),
+    #panel.grid.major = element_line(),
+    
+    # TEXT
+    #text = element_text(),
+    #plot.title = element_text(),
+    #plot.subtitle = element_text(),
+    #plot.caption = element_text(),
+  
+    #legend.title = element_text(),
+    #legend.title.align(),	
+    #legend.text = element_text(),
+    #legend.text.align(),	
+
+    
+    #axis.title = element_text(),
+    #axis.title.y = element_text(),
+    #axis.title.x = element_text(),
+    
+    #axis.text = element_text(),
+  
+    #strip.text = element_text()
+    
+    )
+  
 
 ```
 
