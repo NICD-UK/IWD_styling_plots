@@ -51,6 +51,8 @@ library(dplyr)
 # load data
 data("diamonds")
 data("iris")
+data("mpg")
+
 ```
 
 ### The grammar of graphics: Data  
@@ -155,7 +157,7 @@ ggplot(data = iris) +
 
 * * *
 
-### Exercises
+### Mapping Exercises
 
 Update the code to make the points larger purple triangles and slightly transparent.
 
@@ -260,7 +262,7 @@ ggplot(data = diamonds) +
 
 * * *
 
-### Exercise
+### Statistic Exercise
 
 Use `stat_summary()` to add a red dot at the mean `depth` for each group
 
@@ -271,6 +273,7 @@ ggplot(diamonds) +
 
 Hint: You will need to change the default geom of `stat_summary()`
 
+* * *
 
 ### The grammar of graphics: Scales  
 ##### data / mapping / statistics / **SCALES** / geometries / facets / coordinates / theme
@@ -278,33 +281,65 @@ Hint: You will need to change the default geom of `stat_summary()`
 Scales map our input data to the graphical output. 
 Scales define how the mapping you specify inside `aes()` should happen. 
 All mappings have an associated scale even if not specified.
-For example, when you assign a variable to `colour` it determines what kind of values they are (discrete or continuous) and scales them accordingly. 
+For example, when you assign a variable to `colour` it determines what kind of values they are (discrete or continuous, binned) and scales them accordingly. 
 
 ```{r}
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy, colour = class))
+# ggplot looks at the Species variable, sees it has discrete values and automatically assigns a colour to the three Species values. It also creates a legend so you can map back to the points. If we don't like these colours we need to add a scale to update the default colours.
+ggplot(iris) + 
+  geom_point(aes(x = Petal.Length, y = Petal.Width, colour = Species))
 ```
 
-take control by adding one explicitly. All scales follow the same naming 
-conventions.
+```{r}
+# If we don't like the colours ggplot assigns we need to add a scale to update the default colours
+# The brewer scales provide sequential, diverging and qualitative colour schemes from ColorBrewer. 
+# Type: One of seq (sequential), div (diverging) or qual (qualitative)
+ggplot(iris) + 
+  geom_point(aes(x = Petal.Length, y = Petal.Width, colour = Species)) + 
+  scale_color_brewer(type = 'qual')
+
+```
+
+> **Remember**: You can add colours manually but be aware that colours and complex so you need to consider whether your chosen colours represent the data. For example, qualitative schemes should not imply magnitude differences. 
+> You should also consider how they are percieved by those with colour deficiencies.
 
 ```{r}
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy, colour = class)) +
-  scale_color_manual(values = c("pink", "purple", "blue", "red", "green", "navy", "yellow")) #+
-  #scale_colour_brewer(type = 'qual')
+# NICD branded colours 
+ggplot(iris) + 
+  geom_point(aes(x = Petal.Length, y = Petal.Width, colour = Species)) + 
+  scale_color_manual(values = c("#002D30", "#4FE18F", "#A361FF")) 
 ```
 
 Positional mappings (x and y) also have associated scales.
-
+You can use scale to change break points, gridlines and transform the data. Each scale has built-in transformations but the default is normally set as 'identity' - do not transform that data. Built-in transformations include "asn", "atanh", "boxcox", "date", "exp", "hms", "identity", "log", "log10", "log1p", "log2", "logit", "modulus", "probability", "probit", "pseudo_log", "reciprocal", "reverse", "sqrt" and "time".
 ```{r}
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy)) + 
+# scale the continous x and y values
+ggplot(iris) + 
+  geom_point(aes(x = Petal.Length, y = Petal.Width)) +
   scale_x_continuous(breaks = c(3, 5, 6)) + 
   scale_y_continuous(trans = 'log10')
 ```
+> **Remember:** if you get stuck, there is a lot of documentation available for ggplot2.
 
+* * *
 
+### Scale Exercise
+
+Modify the code below to create a bubble chart (scatterplot with size mapped to
+a continuous variable) showing `cyl` with size. Make sure that only the present 
+amount of cylinders (4, 5, 6, and 8) are present in the legend.
+
+```{r}
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy, colour = class, size = cyl)) + 
+  scale_colour_brewer(type = 'qual') +
+  #scale_size(breaks = c(4,5,6,8)) #scales area
+#scale_radius(breaks = c(4,5,6,8))
+scale_size_area(breaks = c(4,5,6,8))
+# the eye percieves the area not the radius. 
+```
+
+Hint: The `breaks` argument in the scale is used to control which values are
+present in the legend.
 
 
 
@@ -312,35 +347,57 @@ ggplot(mpg) +
 ##### data / mapping / statistics / scales / geometries / **FACETS** / coordinates / theme  
 - Facets divide a plot into subplots based on the values of one or more discrete values. 
 - It is a good way to avoid overplotting.
-- They should not be used to combine separate plots.
+- They should **not** be used to combine separate plots.
+- They share an axis, so it makes comparison easy
+
+
 You may wish to have multiple plotting areas. It is the layout of your subplots and the layout may have some meaning. 
 
 ```{r}
-# ~ take the value and map to panel
+# facet_wrap() wraps a 1d sequence of panels into 2d.
+ggplot(mpg) +
+  geom_point(aes(x=displ, y=hwy)) +
+  facet_wrap(~ class)
+```
+
+```{r}
+#facet_grid() forms a matrix of panels defined by row and column faceting variables. It is most useful when you have two discrete variables, and all combinations of the variables exist in the data. If you have only one variable with many levels, try facet_wrap().
+
+ggplot(mpg) +
+  geom_point(aes(x=displ, y=hwy)) +
+  facet_wrap(year ~ drv)
 ```
 
 ### The grammar of graphics: Coordinates  
 ##### data / mapping / statistics / scales / geometries / facets / **COORDINATES** / theme 
 
-- the coordinate system modifies the x and y values
-The scaled positions are passed through the coordinate system. You often don't think about it as we are used to the using the cartesian coordinate system but if you work in mapping you will be more familiar with other coordinate systems. It is specific to positional asethetic.
-- limits and transformation can be applied in scale or in coord
+- The coordinate system modifies the x and y values  
+- The scaled positions are passed through the coordinate system. You often don't think about it as we are used to the using the cartesian coordinate system but if you work in mapping you will be more familiar with other coordinate systems..
+- Limits and transformation can be applied in scale or in coord
   - scale will apply it in the beginning
   - coord will apply it at the end
-  - you usually want coord if you want to update axses. If you limit the axis with scale it will remove values outside of your scale, whereas if you scale with coord_cartesian you are propertly zooming - you are not affecting the date
+  - You usually want coord if you want to update axes. If you limit the axis with scale it will remove values outside of your scale, whereas if you scale with coord_cartesian you are properly zooming - you are not affecting the data
 
-- it changes how the data is being drawn
-- used in cartography (many ways of transforming longitudes and latitudes)
-
-Other coordinate systems
-- coord_cartesian: most plots are drawn in a cartesian coordinate system
-- coord_polar: x and y as radius and angle
-
+Other coordinate systems  
+- coord_cartesian: most plots are drawn in a cartesian coordinate system  
+- coord_polar: interprets x and y as radius and angle  
 
 
 ```{r}
-
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x=cut)) +
+  coord_polar()
 ```
+
+> **Remember**: remember to us `coord_cartesian()` rather than scale when you don't want to affect your data. 
+
+```{r}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x=cut))# +
+  #scale_y_continuous(limits = c(0, 12500))
+  #coord_cartesian(ylim=c(0, 12500))
+```
+
 
 ### The grammar of graphics: Theme   
 ##### data / mapping / statistics / scales / geometries / facets / coordinates / **THEME** 
