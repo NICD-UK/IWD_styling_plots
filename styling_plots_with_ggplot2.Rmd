@@ -19,7 +19,7 @@ The __<span style="color: #4FE18F;">second part</span>__ of the notebook provide
 ## <span style="background-color: #4FE18F;">Part 1: The grammar of graphics</span>
 ggplot2 is an implementation of the theoretical framework for constructing data visualisations known as the Grammar of Graphics. 
 
-Rather than thinking of data visualisations as entirely separate entities, e.g., box plot, line chart, bar chart, scatter plot, the Grammar of Graphics breaks all data visualisations into eight constituent parts, which are layered on top of each other. The theory explains the relationships between these eight parts: 
+Rather than thinking of data visualisations as entirely separate entities, e.g., box plot, line chart, bar chart, scatter plot, the Grammar of Graphics breaks all data visualisations into eight constituent parts, which are layered on top of each other. The theory explains the relationships between these eight parts:
 
 - theme
 - coordinates
@@ -30,7 +30,7 @@ Rather than thinking of data visualisations as entirely separate entities, e.g.,
 - mapping
 - data 
 
-This approach means you are not limited to a set of predefined data visualizations. You can build plots from the bottom up, and tailor them however you prefer.
+This approach means you are not limited to a set of predefined data visualisations. You can build plots from the bottom up, and tailor them however you prefer.
 
 In the sections below we will use the Grammar of Graphics framework to explore how to create plots with ggplot2.
 
@@ -151,7 +151,7 @@ ggplot(data = iris) +
 ```
 
 
-> **_Remember:_** If you want to map a colour from the data put it in aes() if you want to set a colour or size put it outside aes().
+> **_Remember:_** If you want to map a colour from the data put it in `aes()` if you want to set a colour or size put it outside `aes()`.
 
 * * *
 
@@ -357,7 +357,9 @@ Other coordinate systems
 > Decision making is the key competency in data visualisation. We need to make effective decisions efficiently. We can use a design process to facilitate effective decision making and we can adopt a standard theme, based upon good design principals, to streamline the final presentation work. 
 
 ### `theme()` arguments
-```{r eval=FALSE}
+
+```{r eval=FALSE, include=TRUE}
+# this code will not run
 theme(
   line,
   rect,
@@ -460,7 +462,7 @@ theme(
 
 ### Element functions
 
-`theme()` views plots as a mixture:
+`theme()` constructs plots as a combination of:
 
 - Rectangles 
 - Lines
@@ -478,6 +480,7 @@ The `element_` functions specify the display of how non-data components of the p
 `element_rect()`
 
 ```{r, eval=FALSE, include=TRUE}
+# this code will not run
 element_rect(
   fill = NULL,
   colour = NULL,
@@ -495,7 +498,7 @@ element_rect(
  - <span style="color: #ffa45a;">legend background</span>
  - <span style="color: #A361FF;">legend box background</span>
 
-```{r, include=TRUE, echo=FALSE}
+```{r}
 
 # Colours
   dark_green <- "#002D30"
@@ -542,6 +545,7 @@ ggplot(data = iris) +
 `element_line()`
 
 ```{r, eval=FALSE, include=TRUE}
+# this code will not run
 element_line(
    colour = NULL,
    size = NULL,
@@ -558,7 +562,7 @@ element_line(
  - <span style="color: #A361FF;">panel grid minor</span>
  - <span style="color: #00C3D6;">panel grid major</span>
 
-```{r, include=TRUE, echo=FALSE}
+```{r}
 
 # Colours
   dark_green <- "#002D30"
@@ -604,6 +608,7 @@ ggplot(data = iris) +
 `element_text()`
 
 ```{r eval=FALSE}
+# this code will not run
 element_text(
   family = NULL,
   face = NULL,
@@ -625,12 +630,12 @@ element_text(
  - <span style="color: #FF709D;">plot caption</span>
  - <span style="color: #ffa45a;">legend title</span>
  - <span style="color: #002D30;">legend text</span>
-  - <span style="color: #00C3D6;">axis title x</span>
-  - <span style="color: #4FE18F;">axis title y</span>
+ - <span style="color: #00C3D6;">axis title x</span>
+ - <span style="color: #4FE18F;">axis title y</span>
  - <span style="color: #007883;">axis text</span>
-  - <span style="color: "black";">strip text</span>
+ - <span style="color: #000000;">strip text</span>
 
-```{r, include=TRUE, echo=FALSE}
+```{r}
 
 # Colours
   dark_green <- "#002D30"
@@ -642,7 +647,7 @@ element_text(
   purple <- "#A361FF"
   orange <- "#ffa45a"
 # Font  
-#  font <- "Derailed"
+# font <- "Derailed"
 
 # The plot
 ggplot(data = iris) +
@@ -713,8 +718,9 @@ ggplot(data = iris) +
 * * * 
 
 Task: 
-- Review the [`theme()` documentation](https://ggplot2.tidyverse.org/reference/theme.html).
-- update the theme below
+
+- Review the [`theme()` documentation](https://ggplot2.tidyverse.org/reference/theme.html)  
+- Update the theme in the code chunk below  
 
 ```{r}
 ggplot(data = iris) +
