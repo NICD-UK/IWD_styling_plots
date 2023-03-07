@@ -5,7 +5,7 @@
 ### Practical Set-up: RStudio  
 - File -> New Project  
 - Version Control -> Git   
-- Repo url: [https://github.com/NICD-UK/IWD_styling_plots.git](https://github.com/NICD-UK/IWD_styling_plots)  
+- Repo url: [https://github.com/NICD-UK/IWD_styling_plots.git](https://github.com/NICD-UK/IWD_styling_plots.git)  
 
 ### Practical Set-up: Google Colab  
 
